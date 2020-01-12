@@ -1,0 +1,4 @@
+Changes to goat.svg by TGRCDev:
+   - Changed the group id to "layer_1"
+   - Changed all "style" attributes to "fill" attributes
+   - Removed the "style" attribute from the <svg> tag
