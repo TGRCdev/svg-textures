@@ -3,7 +3,7 @@ render_mode unshaded;
 
 uniform sampler2D svg_elements;
 
-const int HEADER_SIZE = 4;
+// const int HEADER_SIZE = 4; // Only works in Godot 3.2 master branch WHOOPS
 
 // SVG Header
 // 0-1: SVG image scale
@@ -30,7 +30,8 @@ vec2 get_svg_size()
 
 float read_float(int index, int offset)
 {
-	return texelFetch(svg_elements, ivec2((index*get_max_elem_size())+offset+HEADER_SIZE, 0), 0).r;
+	//return texelFetch(svg_elements, ivec2((index*get_max_elem_size())+offset+HEADER_SIZE, 0), 0).r;
+	return texelFetch(svg_elements, ivec2((index*get_max_elem_size())+offset+4, 0), 0).r;
 }
 
 int read_int(int index, int offset)
@@ -97,15 +98,18 @@ vec4 calc_rect(int index, vec2 uv)
 	)
 	{
 		vec4 result = vec4(0.0);
-		switch(read_int(index, 10)) // Handle color
-		{
-			case 0: // Flat color
-				result = read_vec4(index, 11);
-				break;
-			default: // TODO: This
-				result = vec4(0.0,1.0,0.0,1.0);
-				break;
-		}
+		int filltype = read_int(index, 10);
+		// Apparently switch statements also only work on Godot 3.2 master branch???
+		//switch(filltype) // Handle color
+		//{
+		//	case 0: // Flat color
+		//		result = read_vec4(index, 11);
+		//		break;
+		//	default: // TODO: This
+		//		result = vec4(0.0,1.0,0.0,1.0);
+		//		break;
+		//}
+		result = (filltype == 0) ? read_vec4(index, 11) : vec4(0.0);
 		return result;
 	}
 	else
@@ -131,15 +135,18 @@ void fragment()
 	for(int i = 0; i < elem_count; i++)
 	{
 		int element_type = read_int(i, 0);
-		switch(element_type)
-		{
-			case 1: // RECT
-				vec4 result = calc_rect(i, UV * svg_size);
-				ALBEDO = mix(ALBEDO, result.rgb, result.a);
-				ALPHA = min(ALPHA + result.a, 1.0);
-				break;
-			default:
-				break;
-		}
+		//switch(element_type)
+		//{
+		//	case 1: // RECT
+		//		vec4 result = calc_rect(i, UV * svg_size);
+		//		ALBEDO = mix(ALBEDO, result.rgb, result.a);
+		//		ALPHA = min(ALPHA + result.a, 1.0);
+		//		break;
+		//	default:
+		//		break;
+		//}
+		vec4 result = (element_type == 1) ? calc_rect(i, UV * svg_size) : vec4(0.0);
+		ALBEDO = mix(ALBEDO, result.rgb, result.a);
+		ALPHA = min(ALPHA + result.a, 1.0);
 	}
 }
