@@ -78,6 +78,89 @@ mat3 read_3x2mat(int index, int offset)
 	return ret;
 }
 
+// Gradient attributes
+// 0-1: Common SVG attributes
+// 2: Fill type
+// 3: Gradient type
+// 4: Spread method
+// 5-6: Position one (begin when LINEAR, center when RADIAL/FOCAL)
+// 7-8: Position two (end when LINEAR, radius when RADIAL, focal when FOCAL)
+// 9-10: Pre-calculated normalized direction vector
+// 11: Pre-calculated distance
+// 12: Radius
+// 13: Stop count
+// 14-?: Color stops, ordered by offset
+vec4 calc_gradient(int index, vec2 uv)
+{
+	int stop_count = read_int(index, 13);
+	if (stop_count == 0) // No color stops defined
+	{
+		return vec4(0.0,0.0,0.0,1.0);
+	}
+	else if(stop_count == 1) // Only one color, no lerp
+	{
+		return read_vec4(index, 15);
+	}
+	float dist = read_float(index, 11);
+	if(dist == 0.0)
+	{
+		return read_vec4(index, 15);
+	}
+	vec2 p1 = read_vec2(index, 5);
+	vec2 p2 = read_vec2(index, 7);
+	vec2 dir = read_vec2(index, 9);
+	
+	float PI = 3.14159265359;
+	int spread_method = read_int(index, 4);
+	// First, we modify the UV to match our position handles
+	uv = (uv - p1) / dist;
+	
+	// Now we determine the offset of our UV relative to the line segment
+	vec2 lhs = uv - p1;
+	float dotP = dot(lhs, dir);
+	
+	// Modify by the spread method
+	dotP = spread_method == 1 ? mod(dotP, 1.0) : 
+		(spread_method == 2 ? acos(cos(dotP * PI)) / PI :
+			dotP);
+	
+	if(stop_count == 2)
+	{
+		return mix(read_vec4(index, 15), read_vec4(index, 20), clamp(dotP, 0.0, 1.0));
+	}
+	// We do a binary search of the offsets to get our color range
+	int start = 0;
+	int end = stop_count-1;
+	int mid = start + ((end - start) / 2);
+	while((end - start) > 1)
+	{
+		float midval = read_float(index, 14+(5*mid));
+		if(midval < dotP) // Move to right
+		{
+			start = mid;
+		}
+		else if(midval > dotP)
+		{
+			end = mid;
+		}
+		else
+		{
+			return read_vec4(index, 15+(5*mid));
+		}
+		mid = start + ((end - start) / 2);
+	}
+	// Now, the index distance between start and end is 1
+	float startval = read_float(index, 14+(5*start));
+	float endval = read_float(index, 14+(5*end));
+	
+	// Calculate the offset between the two colors
+	float t = (dotP - startval) / (endval - startval);
+	
+	vec4 startcol = read_vec4(index, 15+(5*start));
+	vec4 endcol = read_vec4(index, 15+(5*end));
+	return mix(startcol, endcol, t);
+}
+
 // Fill common attributes
 // 0-1: Common SVG attributes
 // 2: Fill type
@@ -85,7 +168,8 @@ vec4 calc_fill(int index, vec2 uv)
 {
 	int fill_type = read_int(index, 2);
 	return fill_type == 1 ? read_vec4(index, 3) : // FLAT
-			vec4(0.0,0.0,0.0,1.0); // NONE / unimplemented
+		(fill_type == 2 ? calc_gradient(index, uv) : // GRADIENT
+			vec4(0.0,0.0,0.0,1.0)); // NONE / unimplemented
 }
 
 // Rect attributes
@@ -108,14 +192,20 @@ vec4 calc_rect(int index, vec2 uv)
 		uv.y < 1.0 && uv.y > 0.0
 	)
 	{
-		return calc_fill(read_int(index, 12), uv);
+		int fill_pos = read_int(index, 12);
+		if(fill_pos < 0)
+		{
+			return vec4(0.0,0.0,0.0,1.0);
+		}
+		else
+		{
+			return calc_fill(read_int(index, 12), uv);
+		}
 	}
 	else
 	{
 		return vec4(0.0);
 	}
-	
-	
 }
 
 // SVG Element Common Attributes
@@ -128,12 +218,6 @@ void fragment()
 	ALPHA = 0.0;
 	int elem_count = get_element_count();
 	vec2 svg_size = get_svg_size();
-	
-	//if(offset.x < 8.0)
-	//{
-	//	ALBEDO = vec3(1.0,0.0,0.0);
-	//	ALPHA = 1.0;
-	//}
 	
 	for(int i = 0; i < elem_count; i++)
 	{
@@ -154,5 +238,7 @@ void fragment()
 		
 		ALBEDO = mix(ALBEDO, result.rgb, result.a);
 		ALPHA = min(ALPHA + result.a, 1.0);
-	}
+	}	
+	
+	ALBEDO = pow(ALBEDO, vec3(2.2)); // Convert to sRGB
 }

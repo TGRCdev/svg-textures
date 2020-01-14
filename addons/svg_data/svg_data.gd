@@ -27,9 +27,8 @@ func recalculate_id_indexes():
 		_index_by_id[_elements[i].id] = i;
 
 func add_element(element):
-	if(element._svg_data): return;
 	if(element.id.empty()): return; # "" is not a valid ID
-	if(_objects_by_id.has(element.id)): return;
+	if(element._svg_data == self and _objects_by_id.has(element.id)): return;
 	
 	_index_by_id[element.id] = _elements.size();
 	_objects_by_id[element.id] = element;
@@ -39,7 +38,7 @@ func add_element(element):
 	emit_signal("svg_update");
 
 func remove_element(element):
-	if(element._svg_data != self): return;
+	if(not element or element._svg_data != self): return;
 	_elements.erase(element);
 	_objects_by_id.erase(element.id);
 	_index_by_id.erase(element.id);

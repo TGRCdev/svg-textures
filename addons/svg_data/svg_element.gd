@@ -5,7 +5,7 @@ extends Resource
 # inheritance and overall data handling.
 
 enum ELEMENT_TYPE {
-	NONE = 0 # Default behaviour: Skips processing of the element
+	NONE = 0, # Default behaviour: Skips processing of the element
 	RECT = 1,
 	CIRCLE = 2,
 	PATH = 3,
@@ -13,18 +13,29 @@ enum ELEMENT_TYPE {
 }
 
 enum FILL_TYPE {
-	NONE = 0 # Default behaviour: flat black
+	NONE = 0, # Default behaviour: flat black
 	FLAT = 1,
 	GRADIENT = 2,
 	PATTERN = 3, # We aren't implementing this right now, but we'll keep the enum reserved in case we do later 
+}
+
+enum GRADIENT_TYPE {
+	LINEAR = 0 # Default behaviour: Linear
+	RADIAL = 1,
+}
+
+enum GRADIENT_SPREAD_METHOD {
+	PAD = 0, # Default behaviour: Pad
+	REPEAT = 1,
+	REFLECT = 2
 }
 
 signal svg_attribute_changed(attribute, value);
 
 var _svg_data;
 
-var id : String setget set_id, get_id;
-var parent_id : String setget set_parent_id, get_parent_id;
+export var id : String setget set_id, get_id;
+export var parent_id : String setget set_parent_id, get_parent_id;
 
 func set_id(newid):
 	id = newid;
@@ -47,7 +58,7 @@ func get_svg_data() -> PoolByteArray:
 	
 	# 1: Parent index
 	if _svg_data and parent_id:
-		buffer.put_float(_svg_data._index_by_id[parent_id])
+		buffer.put_float(_svg_data.get_element_index(parent_id))
 	else:
 		buffer.put_float(-1);
 	

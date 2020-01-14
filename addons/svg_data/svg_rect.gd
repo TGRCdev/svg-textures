@@ -6,9 +6,9 @@ extends "svg_element.gd"
 func _element_type():
 	return ELEMENT_TYPE.RECT; #RECT
 
-var transform : Transform2D setget set_transform, get_transform;
-var offset : Vector2 = Vector2.ZERO setget set_offset, get_offset;
-var fill_id : String setget set_fill_id, get_fill_id;
+export var transform : Transform2D setget set_transform, get_transform;
+export var offset : Vector2 = Vector2.ZERO setget set_offset, get_offset;
+export var fill_id : String setget set_fill_id, get_fill_id;
 
 func set_transform(trns):
 	transform = trns;

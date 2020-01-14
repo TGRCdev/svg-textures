@@ -1,6 +1,6 @@
 extends "svg_element.gd"
 
-var color : Color setget set_color, get_color;
+export var color : Color setget set_color, get_color;
 
 func set_color(value):
 	color = value;
@@ -10,6 +10,9 @@ func get_color():
 
 func _element_type():
 	return ELEMENT_TYPE.FILL;
+
+func _fill_type():
+	return FILL_TYPE.FLAT;
 
 # Flat fill data structure
 # 0-1: Common SVG attributes
