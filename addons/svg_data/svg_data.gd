@@ -63,25 +63,22 @@ func get_element_by_id(id):
 
 # SVG Header
 # 0-1: Relative size of the SVG image
-# 2: Size of each element in floats 
-# 3: Number of elements
+# 2: Number of elements
+# 3-?: Array of indices pointing to the first float of each element, offset
+#      by the total size of the SVG header. (i.e. 0 would be the first float
+#      after the SVG header)
 func get_svg_data() -> PoolByteArray:
-	var objs = Array();
-	var max_size = 0;
-	for elem in _elements:
-		if not elem and _elements.has(elem):
-			self.remove_element(elem);
-			continue;
-		if elem.has_method("get_svg_data"):
-			var data = elem.get_svg_data()
-			objs.append(data);
-			max_size = max(max_size, data.size());
 	var buffer = StreamPeerBuffer.new();
 	buffer.put_float(size.x);
 	buffer.put_float(size.y); # Relative SVG "size"
-	buffer.put_float(float(max_size / 4)); # Element size
 	buffer.put_float(float(_elements.size())); # Element count
-	for obj in objs:
-		obj.resize(max_size);
-		buffer.put_data(obj);
+	var heap = StreamPeerBuffer.new();
+	for elem in _elements:
+		if (not elem or not elem.has_method("get_svg_data")) and _elements.has(elem):
+			self.remove_element(elem);
+			continue;
+		else:
+			buffer.put_float(heap.data_array.size() / 4); # Index to element beginning
+			heap.put_data(elem.get_svg_data());
+	buffer.put_data(heap.data_array);
 	return buffer.data_array;

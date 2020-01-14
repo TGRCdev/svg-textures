@@ -7,17 +7,19 @@ uniform sampler2D svg_elements;
 
 // SVG Header
 // 0-1: SVG image scale
-// 2: Element size
-// 3: Number of elements
+// 2: Number of elements
+// 3-?: Array of indices on heap
+// "Heap" data comes directly after the header
 
-int get_max_elem_size()
+int get_element_count()
 {
 	return int(texelFetch(svg_elements, ivec2(2,0), 0).r);
 }
 
-int get_element_count()
+int get_header_size() // this also doubles as the offset to the beginning of the heap
 {
-	return int(texelFetch(svg_elements, ivec2(3,0), 0).r);
+	int elems = get_element_count();
+	return 3 + elems; // one float per element in the header array
 }
 
 vec2 get_svg_size()
@@ -28,10 +30,14 @@ vec2 get_svg_size()
 	);
 }
 
+int get_heap_offset(int index)
+{
+	return int(texelFetch(svg_elements, ivec2(3+index, 0), 0).r);
+}
+
 float read_float(int index, int offset)
 {
-	//return texelFetch(svg_elements, ivec2((index*get_max_elem_size())+offset+HEADER_SIZE, 0), 0).r;
-	return texelFetch(svg_elements, ivec2((index*get_max_elem_size())+offset+4, 0), 0).r;
+	return texelFetch(svg_elements, ivec2(get_heap_offset(index)+offset+get_header_size(), 0), 0).r;
 }
 
 int read_int(int index, int offset)
@@ -120,7 +126,6 @@ void fragment()
 {
 	ALBEDO = vec3(0.0);
 	ALPHA = 0.0;
-	int elem_size = get_max_elem_size();
 	int elem_count = get_element_count();
 	vec2 svg_size = get_svg_size();
 	
@@ -132,6 +137,7 @@ void fragment()
 	
 	for(int i = 0; i < elem_count; i++)
 	{
+		int heap_index = get_heap_offset(i);
 		int element_type = read_int(i, 0);
 		//switch(element_type)
 		//{
