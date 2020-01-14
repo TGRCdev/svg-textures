@@ -1,19 +1,30 @@
 tool
-extends "res://addons/svg_data/svg_element.gd"
+extends "svg_element.gd"
+
+# This class represents a <rect> SVG element.
 
 func _element_type():
-	return 1; #RECT
+	return ELEMENT_TYPE.RECT; #RECT
 
-var transform : Transform2D;
-var offset : Vector2 = Vector2.ZERO;
+var transform : Transform2D setget set_transform, get_transform;
+var offset : Vector2 = Vector2.ZERO setget set_offset, get_offset;
+var fill_id : String setget set_fill_id, get_fill_id;
 
-var fill_type : int;
-var fill; # Either Color or Gradient
-
-func _init():
-	transform = Transform2D();
-	fill_type = 0; # FILL
-	fill = Color(0.0,0.0,0.0,1.0);
+func set_transform(trns):
+	transform = trns;
+	emit_signal("svg_attribute_changed", "transform", transform);
+func get_transform():
+	return transform;
+func set_offset(value):
+	offset = value;
+	emit_signal("svg_attribute_changed", "offset", value);
+func get_offset():
+	return offset;
+func set_fill_id(id):
+	fill_id = id;
+	emit_signal("svg_attribute_changed", "fill_id", id);
+func get_fill_id():
+	return fill_id;
 
 func _get_svg_data() -> PoolByteArray:
 	var buffer = StreamPeerBuffer.new();
@@ -30,18 +41,6 @@ func _get_svg_data() -> PoolByteArray:
 	# 10-11: Offset from pivot
 	buffer.put_float(offset.x);
 	buffer.put_float(offset.y);
-	# 12: Fill type
-	buffer.put_float(fill_type);
-	match(fill_type):
-		# 13-16: Flat color
-		0: # Flat
-			buffer.put_float(fill.r);
-			buffer.put_float(fill.g);
-			buffer.put_float(fill.b);
-			buffer.put_float(fill.a);
-		1: # Gradient
-			# TODO
-			pass
-		_:
-			pass
+	# 12: Stack position of Fill object
+	buffer.put_float(_svg_data.get_element_index(fill_id));
 	return buffer.data_array;

@@ -72,19 +72,22 @@ mat3 read_3x2mat(int index, int offset)
 	return ret;
 }
 
-// SVG Element Common Attributes
-// 0: Element type enum
-// 1: Parent index
+// Fill common attributes
+// 0-1: Common SVG attributes
+// 2: Fill type
+vec4 calc_fill(int index, vec2 uv)
+{
+	int fill_type = read_int(index, 2);
+	return fill_type == 1 ? read_vec4(index, 3) : // FLAT
+			vec4(0.0,0.0,0.0,1.0); // NONE / unimplemented
+}
 
 // Rect attributes
-// 0: Element type enum
-// 1: Parent index
+// 0-1: SVG common attributes
 // 2-7: 3x2 Inverse Transform matrix
 // 8-9: Scale
 // 10-11: Offset from pivot
-// 12: Fill type
-// IF [12] == 0 (Flat color)
-//    13-16: RGBA color
+// 12: Stack position of fill object (-1 if no fill, which will default to flat black)
 vec4 calc_rect(int index, vec2 uv)
 {
 	//int parent = read_int(index, 1);
@@ -99,21 +102,7 @@ vec4 calc_rect(int index, vec2 uv)
 		uv.y < 1.0 && uv.y > 0.0
 	)
 	{
-		vec4 result = vec4(0.0);
-		int filltype = read_int(index, 12);
-		// Apparently switch statements also only work on Godot 3.2 master branch???
-		//switch(filltype) // Handle color
-		//{
-		//	case 0: // Flat color
-		//		result = read_vec4(index, 11);
-		//		break;
-		//	default: // TODO: This
-		//		result = vec4(0.0,1.0,0.0,1.0);
-		//		break;
-		//}
-		result = (filltype == 0) ? read_vec4(index, 13) : // FLAT
-			vec4(0.0); // default
-		return result;
+		return calc_fill(read_int(index, 12), uv);
 	}
 	else
 	{
@@ -123,10 +112,14 @@ vec4 calc_rect(int index, vec2 uv)
 	
 }
 
+// SVG Element Common Attributes
+// 0: Element type enum
+// 1: Parent index
+
 void fragment()
 {
-	ALBEDO = vec3(1.0);
-	ALPHA = 0.1;
+	ALBEDO = vec3(0.0);
+	ALPHA = 0.0;
 	int elem_size = get_max_elem_size();
 	int elem_count = get_element_count();
 	vec2 svg_size = get_svg_size();
