@@ -1,17 +1,13 @@
 tool
 extends "svg_element.gd"
 
-export(GRADIENT_TYPE) var gradient_type : int;
+export(GRADIENT_TYPE) var gradient_type : int setget set_gradient_type, get_gradient_type;
 export(GRADIENT_SPREAD_METHOD) var spread_method : int = GRADIENT_SPREAD_METHOD.PAD setget set_spread_method, get_spread_method;
 export var p1 : Vector2 = Vector2(0,0) setget set_p1, get_p1; # begin when LINEAR, center when RADIAL
 export var p2 : Vector2 = Vector2(1,0) setget set_p2, get_p2; # end when LINEAR, focal point when RADIAL
-export var radius : float = 1.0; # used when RADIAL, ignored with LINEAR
+export var radius : float = 1.0 setget set_radius, get_radius; # used when RADIAL, ignored with LINEAR
 
 export var _color_stops : Dictionary; # [offset] = Flat color
-
-# Note about implementation:
-# I'm not supporting offsets outside of [0..1] to simplify my math later on
-# Fix your god damn offsets yourself
 
 func set_p1(pos):
 	p1 = pos;
@@ -28,11 +24,18 @@ func set_spread_method(method):
 	emit_signal("svg_attribute_changed", "spread_method", method);
 func get_spread_method():
 	return spread_method;
+func set_radius(value):
+	radius = value;
+	emit_signal("svg_attribute_changed", "radius", value);
+func get_radius():
+	return radius;
+func set_gradient_type(type):
+	gradient_type = type;
+	emit_signal("svg_attribute_changed", "gradient_type", type);
+func get_gradient_type():
+	return gradient_type;
 
 func set_stop(offset:float, color:Color):
-	if(offset < 0.0 or offset > 1.0):
-		printerr("Color stop offset was out of range 0.0 to 1.0 (Actual value: %f)! Color stop was not added." % offset)
-		return;
 	_color_stops[offset] = color;
 	emit_signal("svg_attribute_changed", "_color_stops", _color_stops);
 func remove_stop(offset:float):

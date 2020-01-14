@@ -78,6 +78,15 @@ mat3 read_3x2mat(int index, int offset)
 	return ret;
 }
 
+float calc_spread_method(int index, float dotP)
+{
+	float PI = 3.14159265359;
+	int spread_method = read_int(index, 4);
+	return spread_method == 1 ? mod(dotP, 1.0) : 
+		(spread_method == 2 ? acos(cos(dotP * PI)) / PI :
+			dotP);
+}
+
 // Gradient attributes
 // 0-1: Common SVG attributes
 // 2: Fill type
@@ -90,28 +99,14 @@ mat3 read_3x2mat(int index, int offset)
 // 12: Radius
 // 13: Stop count
 // 14-?: Color stops, ordered by offset
-vec4 calc_gradient(int index, vec2 uv)
+vec4 calc_linear_gradient(int index, vec2 uv)
 {
 	int stop_count = read_int(index, 13);
-	if (stop_count == 0) // No color stops defined
-	{
-		return vec4(0.0,0.0,0.0,1.0);
-	}
-	else if(stop_count == 1) // Only one color, no lerp
-	{
-		return read_vec4(index, 15);
-	}
 	float dist = read_float(index, 11);
-	if(dist == 0.0)
-	{
-		return read_vec4(index, 15);
-	}
 	vec2 p1 = read_vec2(index, 5);
 	vec2 p2 = read_vec2(index, 7);
 	vec2 dir = read_vec2(index, 9);
 	
-	float PI = 3.14159265359;
-	int spread_method = read_int(index, 4);
 	// First, we modify the UV to match our position handles
 	uv = (uv - p1) / dist;
 	
@@ -120,14 +115,27 @@ vec4 calc_gradient(int index, vec2 uv)
 	float dotP = dot(lhs, dir);
 	
 	// Modify by the spread method
-	dotP = spread_method == 1 ? mod(dotP, 1.0) : 
-		(spread_method == 2 ? acos(cos(dotP * PI)) / PI :
-			dotP);
+	dotP = calc_spread_method(index, dotP);
 	
 	if(stop_count == 2)
 	{
 		return mix(read_vec4(index, 15), read_vec4(index, 20), clamp(dotP, 0.0, 1.0));
 	}
+	
+	// Quick check for if dotP lands out of range
+	float min_offset = read_float(index, 14);
+	vec4 min_color = read_vec4(index, 15);
+	if(dotP <= min_offset)
+	{
+		return min_color;
+	}
+	float max_offset = read_float(index, 14+(5*(stop_count-1)));
+	vec4 max_color = read_vec4(index, 15+(5*(stop_count-1)));
+	if(dotP >= max_offset)
+	{
+		return max_color;
+	}
+	
 	// We do a binary search of the offsets to get our color range
 	int start = 0;
 	int end = stop_count-1;
