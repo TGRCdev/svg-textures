@@ -87,6 +87,60 @@ float calc_spread_method(int index, float dotP)
 			dotP);
 }
 
+vec4 calc_gradient_final(int index, float offset)
+{
+	// Quick check for if offset lands out of range
+	float min_offset = read_float(index, 14);
+	vec4 min_color = read_vec4(index, 15);
+	if(offset <= min_offset)
+	{
+		return min_color;
+	}
+	int stop_count = read_int(index, 13);
+	float max_offset = read_float(index, 14+(5*(stop_count-1)));
+	vec4 max_color = read_vec4(index, 15+(5*(stop_count-1)));
+	if(offset >= max_offset)
+	{
+		return max_color;
+	}
+	
+	// We do a binary search of the offsets to get our color range
+	int start = 0;
+	int end = stop_count-1;
+	int mid = start + ((end - start) / 2);
+	while((end - start) > 1)
+	{
+		float midval = read_float(index, 14+(5*mid));
+		if(midval < offset) // Move to right
+		{
+			start = mid;
+		}
+		else if(midval > offset)
+		{
+			end = mid;
+		}
+		else
+		{
+			return read_vec4(index, 15+(5*mid));
+		}
+		mid = start + ((end - start) / 2);
+	}
+	
+	// Now, the index distance between start and end is 1
+	float startval = read_float(index, 14+(5*start));
+	float endval = read_float(index, 14+(5*end));
+	
+	// Calculate the offset between the two colors
+	float t = (offset - startval) / (endval - startval);
+	
+	//return mix(vec4(1.0,0.0,0.0,1.0), vec4(0.0,1.0,0.0,1.0), -1.0);
+	
+	vec4 startcol = read_vec4(index, 15+(5*start));
+	vec4 endcol = read_vec4(index, 15+(5*end));
+	//return endcol;
+	return mix(startcol, endcol, t);
+}
+
 // Gradient attributes
 // 0-1: Common SVG attributes
 // 2: Fill type
@@ -122,51 +176,44 @@ vec4 calc_linear_gradient(int index, vec2 uv)
 		return mix(read_vec4(index, 15), read_vec4(index, 20), clamp(dotP, 0.0, 1.0));
 	}
 	
-	// Quick check for if dotP lands out of range
-	float min_offset = read_float(index, 14);
-	vec4 min_color = read_vec4(index, 15);
-	if(dotP <= min_offset)
-	{
-		return min_color;
-	}
-	float max_offset = read_float(index, 14+(5*(stop_count-1)));
-	vec4 max_color = read_vec4(index, 15+(5*(stop_count-1)));
-	if(dotP >= max_offset)
-	{
-		return max_color;
-	}
+	return calc_gradient_final(index, dotP);
+}
+
+vec4 calc_radial_gradient(int index, vec2 uv)
+{
+	int stop_count = read_int(index, 13);
+	vec2 center = read_vec2(index, 5);
+	vec2 focal = read_vec2(index, 7);
+	float radius = read_float(index, 12);
+	float dist = read_float(index, 11);
 	
-	// We do a binary search of the offsets to get our color range
-	int start = 0;
-	int end = stop_count-1;
-	int mid = start + ((end - start) / 2);
-	while((end - start) > 1)
+	float offset = distance(center, uv) / radius;
+	
+	
+	offset = calc_spread_method(index, offset);
+	return calc_gradient_final(index, offset);
+}
+
+vec4 calc_gradient(int index, vec2 uv)
+{
+	int gradient_type = read_int(index, 3);
+	int stop_count = read_int(index, 13);
+	if (stop_count == 0) // No color stops defined
 	{
-		float midval = read_float(index, 14+(5*mid));
-		if(midval < dotP) // Move to right
-		{
-			start = mid;
-		}
-		else if(midval > dotP)
-		{
-			end = mid;
-		}
-		else
-		{
-			return read_vec4(index, 15+(5*mid));
-		}
-		mid = start + ((end - start) / 2);
+		return vec4(0.0,0.0,0.0,1.0);
 	}
-	// Now, the index distance between start and end is 1
-	float startval = read_float(index, 14+(5*start));
-	float endval = read_float(index, 14+(5*end));
-	
-	// Calculate the offset between the two colors
-	float t = (dotP - startval) / (endval - startval);
-	
-	vec4 startcol = read_vec4(index, 15+(5*start));
-	vec4 endcol = read_vec4(index, 15+(5*end));
-	return mix(startcol, endcol, t);
+	else if(stop_count == 1) // Only one color, no lerp
+	{
+		return read_vec4(index, 15);
+	}
+	float dist = read_float(index, 11);
+	if(dist == 0.0)
+	{
+		return read_vec4(index, 15);
+	}
+	return gradient_type == 0 ? calc_linear_gradient(index, uv) :
+		(gradient_type == 1 ? calc_radial_gradient(index, uv) :
+		vec4(0.0,0.0,0.0,1.0));
 }
 
 // Fill common attributes
@@ -229,7 +276,6 @@ void fragment()
 	
 	for(int i = 0; i < elem_count; i++)
 	{
-		int heap_index = get_heap_offset(i);
 		int element_type = read_int(i, 0);
 		//switch(element_type)
 		//{
