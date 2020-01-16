@@ -293,27 +293,48 @@ vec4 calc_stroke(int index, vec2 uv, float dist, float offset)
 	}
 }
 
+// Ellipse attributes
+// 0-1: Common SVG attributes
+// 2: Shape type
+// 3-8: 3x2 Inverse Transform matrix
+// 9: Stack position of fill object (-1 if no fill, which will default to flat black)
+// 10: Stack position of stroke object (-1 if no stroke)
+vec4 calc_ellipse(int index, vec2 uv)
+{
+	if(index < 0)
+	{
+		return vec4(0.0);
+	}
+	
+	vec4 result = vec4(0.0);
+	if(distance(uv+vec2(0.5,0.5), vec2(0.5,0.5)) < 0.5)
+	{
+		int fill_pos = read_int(index, 9);
+		result = calc_fill(fill_pos, uv);
+	}
+	
+	// TODO: Handle stroke
+	
+	return result;
+}
+
 // Rect attributes
-// 0-1: SVG common attributes
-// 2-7: 3x2 Inverse Transform matrix
-// 8-9: Corner radii
-// 10: Stack position of fill object (-1 if no fill, which will default to flat black)
-// 11: Stack position of stroke object (-1 if no stroke)
+// 0-1: Common SVG attributes
+// 2: Shape type
+// 3-8: 3x2 Inverse Transform matrix
+// 9: Stack position of fill object (-1 if no fill, which will default to flat black)
+// 10: Stack position of stroke object (-1 if no stroke)
+// 11-12: Corner radii
 vec4 calc_rect(int index, vec2 uv)
 {
-	//int parent = read_int(index, 1);
-	mat3 invr_trns = read_3x2mat(index, 2);
-	// TODO: Parent matrix transforming
-	uv = (invr_trns * vec3(uv, 1.0)).xy;
-	//uv -= (offset / scale);
 	vec4 result = vec4(0.0);
 	if(
 		uv.x < 1.0 && uv.x > 0.0 &&
 		uv.y < 1.0 && uv.y > 0.0
 	)
 	{
-		vec2 corner_radii = read_vec2(index, 8);
-		int fill_pos = read_int(index, 10);
+		vec2 corner_radii = read_vec2(index, 11);
+		int fill_pos = read_int(index, 9);
 		if(corner_radii.x > 0.0 && corner_radii.y > 0.0)
 		{
 			vec2 circ_uv = uv;
@@ -349,6 +370,25 @@ vec4 calc_rect(int index, vec2 uv)
 	return result;
 }
 
+// Shape attributes
+// 0-1: Common SVG attributes
+// 2: Shape type
+// 3-8: 3x2 Inverse Transform matrix
+// 9: Stack position of fill object (-1 if no fill, which will default to flat black)
+// 10: Stack position of stroke object (-1 if no stroke)
+vec4 calc_shape(int index, vec2 uv)
+{
+	int shape_type = read_int(index, 2);
+	//int parent = read_int(index, 1);
+	mat3 invr_trns = read_3x2mat(index, 3);
+	// TODO: Parent matrix transforming
+	uv = (invr_trns * vec3(uv, 1.0)).xy;
+	
+	return shape_type == 1 ? calc_rect(index, uv) : // RECT
+		(shape_type == 2 ? calc_ellipse(index, uv) : // ELLIPSE
+			vec4(0.0)); // UNHANDLED
+}
+
 // SVG Element Common Attributes
 // 0: Element type enum
 // 1: Parent index
@@ -373,7 +413,7 @@ void fragment()
 		//	default:
 		//		break;
 		//}
-		vec4 result = (element_type == 1) ? calc_rect(i, UV * svg_size) :  // RECT
+		vec4 result = (element_type == 1) ? calc_shape(i, UV * svg_size) :  // SHAPE
 			vec4(0.0); // default
 		
 		ALBEDO = mix(ALBEDO, result.rgb, result.a);

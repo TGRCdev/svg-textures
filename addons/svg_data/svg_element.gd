@@ -6,10 +6,16 @@ extends Resource
 
 enum ELEMENT_TYPE {
 	NONE = 0, # Default behaviour: Skips processing of the element
-	RECT = 1,
+	SHAPE = 1,
 	STROKE = 2,
 	PATH = 3,
 	FILL = 4
+}
+
+enum SHAPE_TYPE {
+	NONE = 0, # Default behaviour: Skips processing of the shape
+	RECT = 1,
+	ELLIPSE = 2
 }
 
 enum FILL_TYPE {
