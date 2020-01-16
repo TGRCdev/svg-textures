@@ -1,35 +1,57 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://addons/svg_data/basic_svg_spatial.shader" type="Shader" id=1]
 [ext_resource path="res://addons/svg_data/svg_data.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/svg_instance.gd" type="Script" id=3]
-[ext_resource path="res://addons/svg_data/svg_rect.gd" type="Script" id=4]
-[ext_resource path="res://addons/svg_data/svg_gradient.gd" type="Script" id=9]
+[ext_resource path="res://addons/svg_data/shapes/svg_rect.gd" type="Script" id=4]
+[ext_resource path="res://addons/svg_data/fills/svg_flat.gd" type="Script" id=5]
+[ext_resource path="res://addons/svg_data/fills/svg_gradient.gd" type="Script" id=9]
 
-[sub_resource type="QuadMesh" id=1]
+[sub_resource type="QuadMesh" id=9]
 
-[sub_resource type="Image" id=2]
+[sub_resource type="Image" id=10]
 data = {
-"data": PoolByteArray( 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 232, 65, 0, 0, 40, 66, 0, 0, 142, 66, 0, 0, 168, 66, 0, 0, 194, 66, 0, 0, 252, 66, 0, 0, 27, 67, 0, 0, 40, 67, 0, 0, 69, 67, 0, 0, 98, 67, 0, 0, 111, 67, 0, 0, 134, 67, 0, 128, 140, 67, 0, 0, 155, 67, 0, 128, 161, 67, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 65, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63 ),
+"data": PoolByteArray( 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 128, 64, 0, 0, 0, 0, 0, 0, 232, 65, 0, 0, 36, 66, 0, 0, 84, 66, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 0, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 0, 63, 222, 36, 182, 191, 58, 180, 72, 189, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 0, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 0, 63, 59, 223, 207, 189, 215, 163, 48, 191, 201, 118, 158, 62, 156, 196, 160, 62, 0, 0, 64, 64, 0, 0, 128, 191, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 128, 63, 141, 136, 136, 61, 178, 160, 160, 62, 240, 247, 119, 63, 0, 0, 128, 63 ),
 "format": "RFloat",
 "height": 1,
 "mipmaps": false,
-"width": 371
+"width": 67
 }
 
-[sub_resource type="ImageTexture" id=3]
+[sub_resource type="ImageTexture" id=11]
 flags = 0
 flags = 0
-image = SubResource( 2 )
-size = Vector2( 371, 1 )
+image = SubResource( 10 )
+size = Vector2( 67, 1 )
 
-[sub_resource type="ShaderMaterial" id=4]
+[sub_resource type="ShaderMaterial" id=12]
 shader = ExtResource( 1 )
-shader_param/svg_elements = SubResource( 3 )
+shader_param/svg_elements = SubResource( 11 )
+
+[sub_resource type="Resource" id=13]
+script = ExtResource( 2 )
+size = Vector2( 5, 5 )
+
+[sub_resource type="GDScript" id=14]
+script/source = "tool
+extends Node
+
+const SVGGradient = preload(\"res://addons/svg_data/fills/svg_gradient.gd\");
+
+export var gradient : Resource;
+var svg_data;
+
+func _ready():
+	if not gradient:
+		gradient = SVGGradient.new();
+		gradient.id = self.name;
+	svg_data = get_parent().svg;
+	svg_data.add_element(gradient);
+"
 
 [sub_resource type="Resource" id=5]
 script = ExtResource( 9 )
-id = "Gradient"
+id = "RadGrad"
 parent_id = ""
 gradient_type = 1
 spread_method = 1
@@ -42,23 +64,11 @@ _color_stops = {
 1.0: Color( 0, 0, 1, 1 )
 }
 
-[sub_resource type="Resource" id=6]
-script = ExtResource( 4 )
-id = "Rect"
-parent_id = ""
-transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-offset = Vector2( 0, 0 )
-fill_id = "Gradient"
-
-[sub_resource type="Resource" id=7]
-script = ExtResource( 2 )
-_elements = [ SubResource( 5 ), SubResource( 6 ), SubResource( 5 ), SubResource( 6 ), SubResource( 6 ), SubResource( 5 ), SubResource( 5 ), SubResource( 6 ), SubResource( 5 ), SubResource( 5 ), SubResource( 6 ), SubResource( 5 ), SubResource( 6 ), SubResource( 5 ), SubResource( 6 ), SubResource( 5 ) ]
-
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=15]
 script/source = "tool
 extends Node
 
-const SVGRect = preload(\"res://addons/svg_data/svg_rect.gd\");
+const SVGRect = preload(\"res://addons/svg_data/shapes/svg_rect.gd\");
 
 export var rect : Resource;
 var svg_data;
@@ -66,43 +76,78 @@ var svg_data;
 func _ready():
 	if not rect:
 		rect = SVGRect.new();
-	rect.id = self.name;
+		rect.id = self.name;
 	svg_data = get_parent().svg;
 	svg_data.add_element(rect);
 "
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="Resource" id=6]
+script = ExtResource( 4 )
+id = "GradRect"
+parent_id = ""
+transform = Transform2D( 2, 0, 0, 2, 2.846, 0.098 )
+corner_radii = Vector2( 1, 1 )
+fill_id = "RadGrad"
+stroke_id = ""
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 4 )
+id = "StrokeRect"
+parent_id = ""
+transform = Transform2D( 2, 0, 0, 2, 0.203, 1.38 )
+corner_radii = Vector2( 0.619, 0.628 )
+fill_id = "Flatfill"
+stroke_id = ""
+
+[sub_resource type="GDScript" id=16]
 script/source = "tool
 extends Node
 
-const SVGGradient = preload(\"res://addons/svg_data/svg_gradient.gd\");
+const SVGFlat = preload(\"res://addons/svg_data/fills/svg_flat.gd\");
 
-export var gradient : Resource;
+export var flat : Resource;
 var svg_data;
 
 func _ready():
-	if not gradient:
-		gradient = SVGGradient.new();
-	gradient.id = self.name;
+	if not flat:
+		flat = SVGFlat.new();
+		flat.id = self.name;
 	svg_data = get_parent().svg;
-	svg_data.add_element(gradient);
+	svg_data.add_element(flat);
 "
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 5 )
+id = "Flatfill"
+parent_id = ""
+color = Color( 0.0666667, 0.313726, 0.968627, 1 )
 
 [node name="Spatial" type="Spatial"]
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-mesh = SubResource( 1 )
-material/0 = SubResource( 4 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00401577, -0.0121054, -0.00209832 )
+mesh = SubResource( 9 )
+material/0 = SubResource( 12 )
 script = ExtResource( 3 )
-svg = SubResource( 7 )
+svg = SubResource( 13 )
 
-[node name="Rect" type="Node" parent="MeshInstance"]
-script = SubResource( 8 )
-rect = SubResource( 6 )
-
-[node name="Gradient" type="Node" parent="MeshInstance"]
-script = SubResource( 9 )
+[node name="RadGrad" type="Node" parent="MeshInstance"]
+script = SubResource( 14 )
 gradient = SubResource( 5 )
 
+[node name="GradRect" type="Node" parent="MeshInstance"]
+script = SubResource( 15 )
+rect = SubResource( 6 )
+
+[node name="StrokeRect" type="Node" parent="MeshInstance"]
+script = SubResource( 15 )
+rect = SubResource( 7 )
+
+[node name="Flatfill" type="Node" parent="MeshInstance"]
+script = SubResource( 16 )
+flat = SubResource( 8 )
+
+[node name="Stroke" type="Node" parent="MeshInstance"]
+
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.827883 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.146569, 0.827883 )

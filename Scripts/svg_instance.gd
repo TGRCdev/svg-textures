@@ -10,6 +10,7 @@ var tex;
 var img;
 
 func _update_svg():
+	print("Updating SVG");
 	var data = svg.get_svg_data();
 	img.create_from_data(data.size() / 4, 1, false, Image.FORMAT_RF, data);
 	tex.create_from_image(img, 0);

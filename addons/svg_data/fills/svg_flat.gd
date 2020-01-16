@@ -1,4 +1,5 @@
-extends "svg_element.gd"
+tool
+extends "../svg_element.gd"
 
 export var color : Color setget set_color, get_color;
 

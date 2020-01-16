@@ -7,7 +7,7 @@ extends Resource
 enum ELEMENT_TYPE {
 	NONE = 0, # Default behaviour: Skips processing of the element
 	RECT = 1,
-	CIRCLE = 2,
+	STROKE = 2,
 	PATH = 3,
 	FILL = 4
 }
@@ -30,16 +30,19 @@ enum GRADIENT_SPREAD_METHOD {
 	REFLECT = 2
 }
 
-signal svg_attribute_changed(attribute, value);
+signal svg_attribute_changed(attribute, new_value);
+signal svg_id_changed(old_id, new_id);
 
 var _svg_data;
 
 export var id : String setget set_id, get_id;
 export var parent_id : String setget set_parent_id, get_parent_id;
 
-func set_id(newid):
-	id = newid;
-	emit_signal("svg_attribute_changed", "id", newid);
+func set_id(new_id):
+	var old_id = id;
+	id = new_id;
+	emit_signal("svg_id_changed", old_id, new_id);
+	emit_signal("svg_attribute_changed", "id", new_id);
 func get_id():
 	return id;
 func set_parent_id(newid):

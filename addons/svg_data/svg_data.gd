@@ -8,8 +8,8 @@ extends Resource
 
 var file_path : String;
 
-export var _elements : Array;
-var size : Vector2 = Vector2.ONE;
+var _elements : Array;
+export var size : Vector2 = Vector2.ONE setget set_size, get_size;
 
 var _objects_by_id : Dictionary; # [id] = Reference
 var _index_by_id : Dictionary; # [id] = elements index, updated when elements are added/removed
@@ -17,7 +17,29 @@ var _index_by_id : Dictionary; # [id] = elements index, updated when elements ar
 signal svg_update; # Emitted when the contained SVG data has changed somehow. Use this to pass data to the shader.
 signal svg_element_changed(element, attribute); # Emitted when a contained element is changed.
 
-func _element_changed(element, attribute, value):
+func set_size(newsize):
+	size = newsize;
+	emit_signal("svg_element_changed", self, "size");
+	emit_signal("svg_update");
+func get_size():
+	return size;
+
+func _element_id_changed(old_id, new_id, element):
+	if(old_id == new_id):
+		return;
+
+	_objects_by_id.erase(old_id);
+	var ind = _index_by_id[old_id];
+	_index_by_id.erase(old_id);
+
+	if _objects_by_id.has(new_id):
+		printerr("Element attempted to take already assigned id \"%s\". Element won't be referenceable.");
+		return;
+	
+	_objects_by_id[new_id] = element;
+	_index_by_id[new_id] = ind;
+
+func _element_changed(attribute, value, element):
 	emit_signal("svg_element_changed", element, attribute);
 	emit_signal("svg_update");
 
@@ -35,6 +57,7 @@ func add_element(element):
 	_elements.append(element);
 	element._svg_data = self;
 	element.connect("svg_attribute_changed", self, "_element_changed", [element]);
+	element.connect("svg_id_changed", self, "_element_id_changed", [element]);
 	emit_signal("svg_update");
 
 func remove_element(element):
@@ -45,8 +68,17 @@ func remove_element(element):
 	element._svg_data = null;
 	if element.is_connected("svg_attribute_changed", self, "_element_changed"):
 		element.disconnect("svg_attribute_changed", self, "_element_changed");
+	if element.is_connected("svg_id_changed", self, "_element_id_changed"):
+		element.disconnect("svg_id_changed", self, "_element_id_changed");
 	recalculate_id_indexes();
 	emit_signal("svg_update");
+
+func clear_elements():
+	_objects_by_id.clear();
+	_index_by_id.clear();
+	for elem in _elements:
+		elem._svg_data = null;
+	_elements.clear();
 
 func get_element_index(id) -> int:
 	if not id.empty() and _index_by_id.has(id):

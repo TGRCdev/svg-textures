@@ -1,5 +1,5 @@
 tool
-extends "svg_element.gd"
+extends "../svg_element.gd"
 
 export(GRADIENT_TYPE) var gradient_type : int setget set_gradient_type, get_gradient_type;
 export(GRADIENT_SPREAD_METHOD) var spread_method : int = GRADIENT_SPREAD_METHOD.PAD setget set_spread_method, get_spread_method;

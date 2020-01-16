@@ -189,13 +189,16 @@ vec4 calc_radial_gradient(int index, vec2 uv)
 	
 	float offset = distance(center, uv) / radius;
 	
-	
 	offset = calc_spread_method(index, offset);
 	return calc_gradient_final(index, offset);
 }
 
 vec4 calc_gradient(int index, vec2 uv)
 {
+	if(index < 0)
+	{
+		return vec4(0.0,0.0,0.0,1.0);
+	}
 	int gradient_type = read_int(index, 3);
 	int stop_count = read_int(index, 13);
 	if (stop_count == 0) // No color stops defined
@@ -221,46 +224,129 @@ vec4 calc_gradient(int index, vec2 uv)
 // 2: Fill type
 vec4 calc_fill(int index, vec2 uv)
 {
+	if(index < 0)
+	{
+		return vec4(0.0,0.0,0.0,1.0);
+	}
 	int fill_type = read_int(index, 2);
 	return fill_type == 1 ? read_vec4(index, 3) : // FLAT
 		(fill_type == 2 ? calc_gradient(index, uv) : // GRADIENT
 			vec4(0.0,0.0,0.0,1.0)); // NONE / unimplemented
 }
 
+// Stroke attributes
+// 0-1: Common SVG attributes
+// 2: Width
+// 3: Fill stack position
+// 4: Dash array size
+// 5: Pre-calculated sum of dash array
+// 6-?: Dash array data
+vec4 calc_stroke(int index, vec2 uv, float dist, float offset)
+{
+	// dist is the distance of the fragment from the closest border on the shape
+	// offset is the x position on the unwrapped form of the stroke
+	if(index < 0)
+	{
+		return vec4(0.0);
+	}
+	
+	float width = read_float(index, 2);
+	if(dist > width)
+	{
+		return vec4(0.0);
+	}
+	
+	int fill_index = read_int(index, 3);
+	int dash_count = read_int(index, 4);
+	if(dash_count <= 0)
+	{
+		return calc_fill(fill_index, uv);
+	}
+	
+	float dash_sum = read_float(index, 5);
+	if(dash_sum <= 0.0)
+	{
+		return calc_fill(fill_index, uv);
+	}
+	
+	float dash_loc = mod(offset, dash_sum);
+	int i = 0;
+	bool visib = true;
+	float dash_len = read_float(index, 6+i);
+	while(dash_len < dash_loc)
+	{
+		dash_loc -= dash_len;
+		i += 1;
+		if(i == dash_count)
+		{
+			i = 0;
+		}
+		visib = !visib;
+	}
+	if(visib)
+	{
+		return calc_fill(fill_index, uv);
+	}
+	else
+	{
+		return vec4(0.0);
+	}
+}
+
 // Rect attributes
 // 0-1: SVG common attributes
 // 2-7: 3x2 Inverse Transform matrix
-// 8-9: Scale
-// 10-11: Offset from pivot
-// 12: Stack position of fill object (-1 if no fill, which will default to flat black)
+// 8-9: Corner radii
+// 10: Stack position of fill object (-1 if no fill, which will default to flat black)
+// 11: Stack position of stroke object (-1 if no stroke)
 vec4 calc_rect(int index, vec2 uv)
 {
 	//int parent = read_int(index, 1);
 	mat3 invr_trns = read_3x2mat(index, 2);
 	// TODO: Parent matrix transforming
 	uv = (invr_trns * vec3(uv, 1.0)).xy;
-	vec2 scale = read_vec2(index, 8);
-	vec2 offset = read_vec2(index, 10);
-	uv -= (offset / scale);// / get_svg_size());
+	//uv -= (offset / scale);
+	vec4 result = vec4(0.0);
 	if(
 		uv.x < 1.0 && uv.x > 0.0 &&
 		uv.y < 1.0 && uv.y > 0.0
 	)
 	{
-		int fill_pos = read_int(index, 12);
-		if(fill_pos < 0)
+		vec2 corner_radii = read_vec2(index, 8);
+		int fill_pos = read_int(index, 10);
+		if(corner_radii.x > 0.0 && corner_radii.y > 0.0)
 		{
-			return vec4(0.0,0.0,0.0,1.0);
+			vec2 circ_uv = uv;
+			if(circ_uv.x > 0.5)
+			{
+				circ_uv.x = 1.0 - circ_uv.x;
+			}
+			if(circ_uv.y > 0.5)
+			{
+				circ_uv.y = 1.0 - circ_uv.y;
+			}
+			if(circ_uv.x < corner_radii.x && circ_uv.y < corner_radii.y)
+			{
+				float p = (pow(circ_uv.x - corner_radii.x, 2) / pow(corner_radii.x, 2)) + (pow(circ_uv.y - corner_radii.y, 2) / pow(corner_radii.y, 2));
+				if(p <= 1.0)
+				{
+					return calc_fill(fill_pos, uv);
+				}
+			}
+			else
+			{
+				return calc_fill(fill_pos, uv);
+			}
 		}
 		else
 		{
-			return calc_fill(read_int(index, 12), uv);
+			result = calc_fill(fill_pos, uv);
 		}
 	}
-	else
-	{
-		return vec4(0.0);
-	}
+	
+	// TODO: Calculate stroke
+	
+	return result;
 }
 
 // SVG Element Common Attributes
