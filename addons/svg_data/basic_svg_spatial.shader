@@ -307,7 +307,8 @@ vec4 calc_ellipse(int index, vec2 uv)
 	}
 	
 	vec4 result = vec4(0.0);
-	if(distance(uv+vec2(0.5,0.5), vec2(0.5,0.5)) < 0.5)
+	float dist = distance(uv+vec2(0.5,0.5), vec2(0.5,0.5));
+	if(dist < 0.5)
 	{
 		int fill_pos = read_int(index, 9);
 		result = calc_fill(fill_pos, uv);
@@ -327,7 +328,8 @@ vec4 calc_ellipse(int index, vec2 uv)
 // 11-12: Corner radii
 vec4 calc_rect(int index, vec2 uv)
 {
-	vec4 result = vec4(0.0);
+	vec3 result_col = vec3(0.0);
+	float result_alpha = 0.0;
 	if(
 		uv.x < 1.0 && uv.x > 0.0 &&
 		uv.y < 1.0 && uv.y > 0.0
@@ -351,22 +353,29 @@ vec4 calc_rect(int index, vec2 uv)
 				float p = (pow(circ_uv.x - corner_radii.x, 2) / pow(corner_radii.x, 2)) + (pow(circ_uv.y - corner_radii.y, 2) / pow(corner_radii.y, 2));
 				if(p <= 1.0)
 				{
-					return calc_fill(fill_pos, uv);
+					vec4 res = calc_fill(fill_pos, uv);
+					result_col = res.rgb;
+					result_alpha = res.a;
 				}
 			}
 			else
 			{
-				return calc_fill(fill_pos, uv);
+				vec4 res = calc_fill(fill_pos, uv);
+				result_col = res.rgb;
+				result_alpha = res.a;
 			}
 		}
 		else
 		{
-			result = calc_fill(fill_pos, uv);
+			vec4 res = calc_fill(fill_pos, uv);
+			result_col = res.rgb;
+			result_alpha = res.a;
 		}
 	}
 	
 	// TODO: Calculate stroke
 	
+	vec4 result = vec4(result_col, clamp(result_alpha, 0.0, 1.0));
 	return result;
 }
 

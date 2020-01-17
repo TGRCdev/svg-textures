@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://addons/svg_data/basic_svg_spatial.shader" type="Shader" id=1]
 [ext_resource path="res://addons/svg_data/svg_data.gd" type="Script" id=2]
@@ -8,32 +8,32 @@
 [ext_resource path="res://addons/svg_data/shapes/svg_ellipse.gd" type="Script" id=6]
 [ext_resource path="res://addons/svg_data/fills/svg_gradient.gd" type="Script" id=9]
 
-[sub_resource type="QuadMesh" id=31]
+[sub_resource type="QuadMesh" id=1]
 
-[sub_resource type="Image" id=40]
+[sub_resource type="Image" id=18]
 data = {
-"data": PoolByteArray( 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 65, 0, 0, 0, 0, 0, 0, 232, 65, 0, 0, 40, 66, 0, 0, 68, 66, 0, 0, 156, 66, 0, 0, 170, 66, 0, 0, 192, 66, 0, 0, 240, 66, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 0, 63, 59, 223, 207, 189, 215, 163, 48, 191, 0, 0, 224, 64, 0, 0, 128, 191, 201, 118, 158, 62, 156, 196, 160, 62, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 128, 63, 141, 136, 136, 61, 178, 160, 160, 62, 240, 247, 119, 63, 0, 0, 128, 63, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 63, 205, 204, 204, 61, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 115, 128, 0, 62, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 128, 63, 141, 136, 136, 61, 178, 160, 160, 62, 240, 247, 119, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 0, 63, 0, 0, 0, 128, 0, 0, 0, 128, 0, 0, 128, 63, 232, 251, 209, 191, 101, 59, 127, 191, 0, 0, 192, 64, 0, 0, 128, 191, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 205, 204, 204, 61, 11, 215, 35, 60, 194, 186, 126, 63, 156, 200, 203, 61, 75, 210, 205, 61, 0, 0, 128, 63, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 204, 203, 75, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 0, 64, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 243, 4, 53, 63, 243, 4, 53, 191, 243, 4, 53, 63, 11, 215, 163, 60, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 128, 63, 242, 239, 111, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63 ),
+"data": PoolByteArray( 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 224, 64, 0, 0, 0, 0, 0, 0, 80, 65, 0, 0, 160, 65, 0, 0, 4, 66, 0, 0, 32, 66, 0, 0, 76, 66, 0, 0, 150, 66, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 179, 126, 37, 60, 0, 0, 0, 128, 0, 0, 0, 128, 179, 126, 37, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 140, 144, 16, 61, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 28, 159, 232, 62, 0, 0, 0, 128, 0, 0, 0, 128, 168, 191, 23, 63, 128, 140, 136, 190, 146, 214, 22, 191, 0, 0, 192, 64, 0, 0, 128, 191, 28, 159, 104, 62, 168, 191, 151, 62, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 128, 63, 141, 136, 136, 61, 178, 160, 160, 62, 240, 247, 119, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 0, 128, 204, 204, 76, 63, 204, 204, 76, 63, 0, 0, 0, 128, 60, 155, 53, 192, 34, 219, 57, 192, 0, 0, 160, 64, 0, 0, 128, 191, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 205, 204, 204, 61, 10, 215, 35, 60, 194, 186, 126, 63, 155, 200, 203, 61, 75, 210, 205, 61, 0, 0, 128, 63, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 197, 203, 75, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 64, 0, 0, 128, 191, 0, 0, 0, 64, 0, 0, 128, 63, 0, 0, 0, 64, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 243, 4, 53, 63, 243, 4, 53, 191, 243, 4, 53, 63, 10, 215, 163, 60, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 128, 63, 242, 239, 111, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63 ),
 "format": "RFloat",
 "height": 1,
 "mipmaps": false,
-"width": 155
+"width": 109
 }
 
-[sub_resource type="ImageTexture" id=33]
+[sub_resource type="ImageTexture" id=17]
 flags = 0
 flags = 0
-image = SubResource( 40 )
-size = Vector2( 155, 1 )
+image = SubResource( 18 )
+size = Vector2( 109, 1 )
 
-[sub_resource type="ShaderMaterial" id=34]
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 1 )
-shader_param/svg_elements = SubResource( 33 )
+shader_param/svg_elements = SubResource( 17 )
 
-[sub_resource type="Resource" id=5]
+[sub_resource type="Resource" id=3]
 script = ExtResource( 2 )
 size = Vector2( 5, 5 )
 
-[sub_resource type="GDScript" id=35]
+[sub_resource type="GDScript" id=4]
 script/source = "tool
 extends Node
 
@@ -50,16 +50,16 @@ func _ready():
 	svg_data.add_element(rect);
 "
 
-[sub_resource type="Resource" id=9]
+[sub_resource type="Resource" id=5]
 script = ExtResource( 4 )
-id = "StrokeRect"
+id = "Background"
 parent_id = ""
-transform = Transform2D( 2, 0, 0, 2, 0.203, 1.38 )
-fill_id = "RadGrad"
+transform = Transform2D( 99, 0, 0, 99, 0, 0 )
+fill_id = "BGFill"
 stroke_id = ""
-corner_radii = Vector2( 0.619, 0.628 )
+corner_radii = Vector2( 0, 0 )
 
-[sub_resource type="GDScript" id=36]
+[sub_resource type="GDScript" id=6]
 script/source = "tool
 extends Node
 
@@ -76,13 +76,28 @@ func _ready():
 	svg_data.add_element(flat);
 "
 
-[sub_resource type="Resource" id=11]
+[sub_resource type="Resource" id=7]
+script = ExtResource( 5 )
+id = "BGFill"
+parent_id = ""
+color = Color( 1, 1, 1, 0.0352941 )
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 4 )
+id = "StrokeRect"
+parent_id = ""
+transform = Transform2D( 2.201, 0, 0, 1.687, 0.587, 0.994 )
+fill_id = "RadGrad"
+stroke_id = ""
+corner_radii = Vector2( 0.5, 0 )
+
+[sub_resource type="Resource" id=9]
 script = ExtResource( 5 )
 id = "Flatfill"
 parent_id = ""
 color = Color( 0.0666667, 0.313726, 0.968627, 1 )
 
-[sub_resource type="GDScript" id=37]
+[sub_resource type="GDScript" id=10]
 script/source = "tool
 extends Node
 
@@ -99,15 +114,15 @@ func _ready():
 	svg_data.add_element(ellipse);
 "
 
-[sub_resource type="Resource" id=20]
+[sub_resource type="Resource" id=11]
 script = ExtResource( 6 )
 id = "Ellipse"
 parent_id = ""
-transform = Transform2D( 2, 0, 0, 1, 3.281, 0.997 )
+transform = Transform2D( 0, 1.25, 1.25, 0, 3.63, 3.547 )
 fill_id = "Grad"
 stroke_id = ""
 
-[sub_resource type="GDScript" id=38]
+[sub_resource type="GDScript" id=12]
 script/source = "tool
 extends Node
 
@@ -124,7 +139,7 @@ func _ready():
 	svg_data.add_element(gradient);
 "
 
-[sub_resource type="Resource" id=30]
+[sub_resource type="Resource" id=13]
 script = ExtResource( 9 )
 id = "Grad"
 parent_id = ""
@@ -138,7 +153,7 @@ _color_stops = {
 1.0: Color( 0.796078, 0, 0, 1 )
 }
 
-[sub_resource type="Resource" id=39]
+[sub_resource type="Resource" id=14]
 script = ExtResource( 9 )
 id = "RadGrad"
 parent_id = ""
@@ -152,34 +167,64 @@ _color_stops = {
 1.0: Color( 0, 0, 0, 1 )
 }
 
+[sub_resource type="GDScript" id=15]
+script/source = "extends Label
+
+func _process(delta):
+	self.text = \"FPS: %d\" % Engine.get_frames_per_second();
+"
+
 [node name="Spatial" type="Spatial"]
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00401577, -0.0121054, -0.00209832 )
-mesh = SubResource( 31 )
-material/0 = SubResource( 34 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
 script = ExtResource( 3 )
-svg = SubResource( 5 )
+svg = SubResource( 3 )
+
+[node name="Background" type="Node" parent="MeshInstance"]
+script = SubResource( 4 )
+rect = SubResource( 5 )
+
+[node name="BGFill" type="Node" parent="MeshInstance"]
+script = SubResource( 6 )
+flat = SubResource( 7 )
 
 [node name="StrokeRect" type="Node" parent="MeshInstance"]
-script = SubResource( 35 )
-rect = SubResource( 9 )
+script = SubResource( 4 )
+rect = SubResource( 8 )
 
 [node name="Flatfill" type="Node" parent="MeshInstance"]
-script = SubResource( 36 )
-flat = SubResource( 11 )
+script = SubResource( 6 )
+flat = SubResource( 9 )
 
 [node name="Ellipse" type="Node" parent="MeshInstance"]
-script = SubResource( 37 )
-ellipse = SubResource( 20 )
+script = SubResource( 10 )
+ellipse = SubResource( 11 )
 
 [node name="Grad" type="Node" parent="MeshInstance"]
-script = SubResource( 38 )
-gradient = SubResource( 30 )
+script = SubResource( 12 )
+gradient = SubResource( 13 )
 
 [node name="RadGrad" type="Node" parent="MeshInstance"]
-script = SubResource( 38 )
-gradient = SubResource( 39 )
+script = SubResource( 12 )
+gradient = SubResource( 14 )
+
+[node name="Control" type="Label" parent="."]
+margin_left = 51.0
+margin_top = 50.0
+margin_right = 101.0
+margin_bottom = 70.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_as_outline = 20
+text = "FPS: 60"
+script = SubResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.146569, 0.827883 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.983301 )

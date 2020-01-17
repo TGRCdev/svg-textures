@@ -20,6 +20,10 @@ func _update_svg():
 func _init():
 	svg = SVGData.new();
 	mat = get_surface_material(0);
+	if not mat:
+		mat = ShaderMaterial.new();
+		mat.shader = preload("res://addons/svg_data/basic_svg_spatial.shader");
+		set_surface_material(0, mat);
 	img = Image.new();
 	tex = ImageTexture.new();
 
